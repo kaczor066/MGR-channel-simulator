@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions name="RTDM"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             targetNamespace="http://www.sas.com/xml/schema/sas-svcs/rtdm-1.1/wsdl/"
+             xmlns:tns="http://www.sas.com/xml/schema/sas-svcs/rtdm-1.1/wsdl/"
+             xmlns:typesns="http://www.sas.com/xml/schema/sas-svcs/rtdm-1.1"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema"
+                targetNamespace="http://www.sas.com/xml/schema/sas-svcs/rtdm-1.1"
+                xmlns:tns="http://www.sas.com/xml/schema/sas-svcs/rtdm-1.1"
+                elementFormDefault="qualified">
+
+            <annotation>
+                <documentation>
+                    Schema for SAS Decision Services 'WSDLEvent' Event.
+                    Generated on N, 19 kwi 2015 18:53:02 +0200.
+                </documentation>
+            </annotation>
+            <simpleType name="NameType">
+                <annotation>
+                    <documentation>
+                        Defines a standard format for names that include spaces.
+                        e.g. file names
+                    </documentation>
+                </annotation>
+                <restriction base="normalizedString">
+                    <maxLength value="255"/>
+                    <pattern
+                            value="[^\\/:\*\?&quot;&lt;&gt;\|@&amp;#&apos;~`\[\]\{\}]*"/>
+                </restriction>
+            </simpleType>
+
+            <simpleType name="DataTypes">
+                <annotation>
+                    <documentation>Primitive data types supported by rdm</documentation>
+                </annotation>
+                <restriction base="normalizedString">
+                    <enumeration value="Int"/>
+                    <enumeration value="Boolean"/>
+                    <enumeration value="Float"/>
+                    <enumeration value="DateTime"/>
+                    <enumeration value="String"/>
+                    <enumeration value="Table"/>
+                </restriction>
+            </simpleType>
+
+            <element name="String">
+                <complexType>
+                    <sequence>
+                        <element name="Val" type="string" minOccurs="0"/>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <element name="StringArray">
+                <complexType>
+                    <sequence>
+                        <element name="Val" minOccurs="0">
+                            <complexType>
+                                <sequence>
+                                    <element name="Item" type="string" minOccurs="0" maxOccurs="unbounded"/>
+                                </sequence>
+                            </complexType>
+                        </element>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <element name="Int">
+                <complexType>
+                    <sequence>
+                        <element name="Val" type="long" minOccurs="0"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="IntArray">
+                <complexType>
+                    <sequence>
+                        <element name="Val" minOccurs="0">
+                            <complexType>
+                                <sequence>
+                                    <element name="Item" type="long" minOccurs="0" maxOccurs="unbounded"/>
+                                </sequence>
+                            </complexType>
+                        </element>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <element name="Float">
+                <complexType>
+                    <sequence>
+                        <element name="Val" type="double" minOccurs="0"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="FloatArray">
+                <complexType>
+                    <sequence>
+                        <element name="Val" minOccurs="0">
+                            <complexType>
+                                <sequence>
+                                    <element name="Item" type="double" minOccurs="0" maxOccurs="unbounded"/>
+                                </sequence>
+                            </complexType>
+                        </element>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <element name="Boolean">
+                <complexType>
+                    <sequence>
+                        <element name="Val" type="boolean" minOccurs="0"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="BooleanArray">
+                <complexType>
+                    <sequence>
+                        <element name="Val" minOccurs="0">
+                            <complexType>
+                                <sequence>
+                                    <element name="Item" type="boolean" minOccurs="0" maxOccurs="unbounded"/>
+                                </sequence>
+                            </complexType>
+                        </element>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <element name="DateTime">
+                <complexType>
+                    <sequence>
+                        <element name="Val" type="dateTime" minOccurs="0"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="DateTimeArray">
+                <complexType>
+                    <sequence>
+                        <element name="Val" minOccurs="0">
+                            <complexType>
+                                <sequence>
+                                    <element name="Item" type="dateTime" minOccurs="0" maxOccurs="unbounded"/>
+                                </sequence>
+                            </complexType>
+                        </element>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <complexType name="TableDataType">
+                <annotation>
+                    <documentation>
+                        Only one of the following sequenced elements should be
+                        included with element TableType.Row.Col below. This schema
+                        does not make this constraint visible for reasons previously
+                        noted.
+                    </documentation>
+                </annotation>
+                <sequence>
+                    <element ref="tns:String" minOccurs="0" maxOccurs="1"/>
+                    <element ref="tns:Int" minOccurs="0" maxOccurs="1"/>
+                    <element ref="tns:Float" minOccurs="0" maxOccurs="1"/>
+                    <element ref="tns:Boolean" minOccurs="0" maxOccurs="1"/>
+                    <element ref="tns:DateTime" minOccurs="0" maxOccurs="1"/>
+                </sequence>
+            </complexType>
+            <complexType name="TableColumnType">
+                <attribute name="name" type="tns:NameType" use="required"/>
+                <attribute name="type" type="tns:DataTypes" use="required"/>
+            </complexType>
+
+            <complexType name="TableRowType">
+                <sequence>
+                    <!-- A row, if it exists at all, must have at least 1 Col element -->
+                    <element name="Col" type="tns:TableDataType" minOccurs="1" maxOccurs="unbounded"/>
+                </sequence>
+            </complexType>
+            <complexType name="TableType">
+                <sequence>
+                    <!--  Order of Columns must match order of data in Rows
+                          Table may be completely empty to start, hence minOccurs 0
+                    -->
+                    <element name="Column" type="tns:TableColumnType" minOccurs="0" maxOccurs="unbounded"/>
+                    <element name="Row" type="tns:TableRowType" minOccurs="0" maxOccurs="unbounded"/>
+                </sequence>
+            </complexType>
+
+            <element name="Table">
+                <complexType>
+                    <sequence>
+                        <element name="Val" type="tns:TableType" minOccurs="0"/>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <element name="TableArray">
+                <complexType>
+                    <sequence>
+                        <element name="Val" minOccurs="0">
+                            <complexType>
+                                <sequence>
+                                    <element name="Item" type="tns:TableType" minOccurs="0" maxOccurs="unbounded"
+                                             nillable="true"/>
+                                </sequence>
+                            </complexType>
+                        </element>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <annotation>
+                <documentation>
+                    Input-Type-Mapping:
+                    [Name_1:String],
+                    [Name_2:String],
+                    [Name_3:String],
+                    [Name_4:String],
+                    [Name_5:String],
+                    [Name_6:Int],
+                    [Name_7:Int],
+                    [Name_8:Int],
+                    [Name_9:Int],
+                    [Name_10:Int],
+                    [Name_11:Float],
+                    [Name_12:Float],
+                    [Name_13:Float],
+                    [Name_14:Float],
+                    [Name_15:Float],
+                    [Name_16:DateTime],
+                    [Name_17:DateTime],
+                    [Name_18:DateTime],
+                    [Name_19:DateTime],
+                    [Name_20:DateTime]
+                </documentation>
+            </annotation>
+            <complexType name="DataItemType">
+                <choice>
+                    <element ref="tns:String"/>
+                    <element ref="tns:Int"/>
+                    <element ref="tns:Float"/>
+                    <element ref="tns:DateTime"/>
+                </choice>
+                <attribute name="name" use="required">
+                    <simpleType>
+                        <restriction base="string">
+                            <enumeration value="Name_1"/>
+                            <enumeration value="Name_2"/>
+                            <enumeration value="Name_3"/>
+                            <enumeration value="Name_4"/>
+                            <enumeration value="Name_5"/>
+                            <enumeration value="Name_6"/>
+                            <enumeration value="Name_7"/>
+                            <enumeration value="Name_8"/>
+                            <enumeration value="Name_9"/>
+                            <enumeration value="Name_10"/>
+                            <enumeration value="Name_11"/>
+                            <enumeration value="Name_12"/>
+                            <enumeration value="Name_13"/>
+                            <enumeration value="Name_14"/>
+                            <enumeration value="Name_15"/>
+                            <enumeration value="Name_16"/>
+                            <enumeration value="Name_17"/>
+                            <enumeration value="Name_18"/>
+                            <enumeration value="Name_19"/>
+                            <enumeration value="Name_20"/>
+                        </restriction>
+                    </simpleType>
+                </attribute>
+            </complexType>
+
+            <annotation>
+                <documentation>
+                    Output-Type-Mapping:
+                    [Name_1:String],
+                    [Name_2:String],
+                    [Name_3:String],
+                    [Name_4:String],
+                    [Name_5:String],
+                    [Name_6:Int],
+                    [Name_7:Int],
+                    [Name_8:Int],
+                    [Name_9:Int],
+                    [Name_10:Int],
+                    [Name_11:Float],
+                    [Name_12:Float],
+                    [Name_13:Float],
+                    [Name_14:Float],
+                    [Name_15:Float],
+                    [Name_16:DateTime],
+                    [Name_17:DateTime],
+                    [Name_18:DateTime],
+                    [Name_19:DateTime],
+                    [Name_20:DateTime]
+                </documentation>
+            </annotation>
+            <complexType name="DataItemResponseType">
+                <choice>
+                    <element ref="tns:String"/>
+                    <element ref="tns:Int"/>
+                    <element ref="tns:Float"/>
+                    <element ref="tns:DateTime"/>
+                </choice>
+                <attribute name="name" use="required">
+                    <simpleType>
+                        <restriction base="string">
+                            <enumeration value="Name_1"/>
+                            <enumeration value="Name_2"/>
+                            <enumeration value="Name_3"/>
+                            <enumeration value="Name_4"/>
+                            <enumeration value="Name_5"/>
+                            <enumeration value="Name_6"/>
+                            <enumeration value="Name_7"/>
+                            <enumeration value="Name_8"/>
+                            <enumeration value="Name_9"/>
+                            <enumeration value="Name_10"/>
+                            <enumeration value="Name_11"/>
+                            <enumeration value="Name_12"/>
+                            <enumeration value="Name_13"/>
+                            <enumeration value="Name_14"/>
+                            <enumeration value="Name_15"/>
+                            <enumeration value="Name_16"/>
+                            <enumeration value="Name_17"/>
+                            <enumeration value="Name_18"/>
+                            <enumeration value="Name_19"/>
+                            <enumeration value="Name_20"/>
+                        </restriction>
+                    </simpleType>
+                </attribute>
+            </complexType>
+
+            <complexType name="HeaderType">
+                <sequence>
+                    <element name="Identity" type="string" minOccurs="0"/>
+                    <element name="ClientTimeZoneID" type="normalizedString" minOccurs="1" maxOccurs="1"/>
+                </sequence>
+            </complexType>
+
+            <complexType name="HeaderResponseType">
+                <sequence>
+                    <element name="CorrelationId" type="string" minOccurs="0"/>
+                    <element name="StartTime" type="string"/>
+                    <element name="CompletionTime" type="string"/>
+                </sequence>
+            </complexType>
+
+            <complexType name="BodyType">
+                <sequence>
+                    <element name="Data" type="tns:DataItemType" minOccurs="20" maxOccurs="20"/>
+                </sequence>
+            </complexType>
+
+            <complexType name="BodyResponseType">
+                <sequence>
+                    <element name="Data" type="tns:DataItemResponseType" minOccurs="20" maxOccurs="20"/>
+                </sequence>
+            </complexType>
+
+            <complexType name="EventType">
+                <sequence>
+                    <element name="Header" type="tns:HeaderType" minOccurs="1" maxOccurs="1"/>
+                    <element name="Body" type="tns:BodyType"/>
+                </sequence>
+                <attribute name="name" type="string" use="required" fixed="WSDLEvent"/>
+            </complexType>
+
+            <complexType name="EventResponseType">
+                <sequence>
+                    <element name="Header" type="tns:HeaderResponseType"/>
+                    <element name="Body" type="tns:BodyResponseType"/>
+                </sequence>
+                <attribute name="name" type="string" use="required" fixed="WSDLEvent"/>
+            </complexType>
+
+            <element name="Event" type="tns:EventType"/>
+            <element name="EventResponse" type="tns:EventResponseType"/>
+
+            <element name="FaultException" type="tns:FaultException"/>
+            <complexType name="FaultException">
+                <sequence>
+                    <element name="ExceptionMessage" type="string" minOccurs="0" maxOccurs="unbounded"/>
+                </sequence>
+            </complexType>
+        </schema>
+    </types>
+
+    <message name="eventRequest">
+        <part name="parameters" element="typesns:Event"/>
+    </message>
+    <message name="eventResponse">
+        <part name="parameters" element="typesns:EventResponse"/>
+    </message>
+    <message name="FaultException">
+        <part name="detail" element="typesns:FaultException"/>
+    </message>
+
+    <portType name="EventPortType">
+        <operation name="Event">
+            <input message="tns:eventRequest"/>
+            <output message="tns:eventResponse"/>
+            <fault name="fault" message="tns:FaultException"/>
+        </operation>
+    </portType>
+
+    <binding name="EventSoapBinding" type="tns:EventPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <operation name="Event">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="fault">
+                <soap:fault name="fault" use="literal"/>
+            </fault>
+        </operation>
+    </binding>
+
+    <service name="EventService">
+        <port name="EventPort" binding="tns:EventSoapBinding">
+            <soap:address location="http://localhost:80/RTDM/Event"/>
+        </port>
+    </service>
+</definitions>
