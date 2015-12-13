@@ -1,0 +1,11 @@
+com.mgr
+com.mgr.common.metrics
+com.mgr.common.queue
+com.mgr.common.scenario
+com.mgr.common.scenario.data
+com.mgr.common.scenario.worker
+com.mgr.common.worker
+com.mgr.config
+com.mgr.esper
+com.mgr.rtdm
+com.mgr.rtdm.domain
